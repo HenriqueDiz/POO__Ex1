@@ -16,6 +16,7 @@ public class Exercicio1 {
         printEspecialidades(medicos, especialidades);
     }
 
+    // Função que percorre a lista de médicos e imprime o salário de cada um
     public static void printMedicos(String[] medicos, String[] especialidades) {
         for (String medico : medicos) {
             String[] dadosMedico = medico.split("/");
@@ -30,6 +31,7 @@ public class Exercicio1 {
         System.out.println();
     }
 
+    // Função que percorre a lista de especialidades e imprime o salário total de cada uma
     public static void printEspecialidades(String[] medicos, String[] especialidades) {
         for (String especialidade : especialidades) {
             String nomeEspecialidade = especialidade.split("/")[0];
@@ -38,6 +40,7 @@ public class Exercicio1 {
         }
     }
 
+    // Função que calcula o salário de um médico
     public static double calcularSalarioMedico(String[] especialidades, String especialidade, int anosServico, int horasExtra) {
         for (String esp : especialidades) {
             String[] dadosEspecialidade = esp.split("/");
@@ -55,6 +58,7 @@ public class Exercicio1 {
         return 0;
     }
 
+    // Função que calcula o salário total de todos os médicos de uma especialidade
     public static double calcularSalarioEspecialidade(String[] medicos, String[] especialidades, String especialidade) {
         double totalSalario = 0;
         for (String medico : medicos) {
