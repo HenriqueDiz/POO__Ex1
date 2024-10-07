@@ -12,65 +12,45 @@ public class Exercicio1 {
             "António Silva/oftalmologia/12/5"
         };
 
-        printMedicos(medicos, especialidades);
-        printEspecialidades(medicos, especialidades);
+        funcao(medicos, especialidades);
     }
 
-    // Função que percorre a lista de médicos e imprime o salário de cada um
-    public static void printMedicos(String[] medicos, String[] especialidades) {
+    public static void funcao(String[] medicos , String[] especialidades){
+        double[] salariosEspecialidades = new double[especialidades.length];  // Tabela com os salários totais de cada especialidade
+        String[] nomesEspecialidades = new String[especialidades.length];     // Tabela com os nomes das especialidades
+
+        for (int i = 0; i < especialidades.length; i++)
+            nomesEspecialidades[i] = especialidades[i].split("/")[0];
+
+        // Percorremos a lista dos médicos
         for (String medico : medicos) {
             String[] dadosMedico = medico.split("/");
             String nome = dadosMedico[0];
-            String especialidade = dadosMedico[1];
-            int anosServico = Integer.parseInt(dadosMedico[2]);
-            int horasExtra = Integer.parseInt(dadosMedico[3]);
+            String especialidade = dadosMedico[1].substring(0, 1).toUpperCase() + dadosMedico[1].substring(1);
+            int anos = Integer.parseInt(dadosMedico[2]);
+            int horasExtras = Integer.parseInt(dadosMedico[3]);
 
-            double salario = calcularSalarioMedico(especialidades, especialidade, anosServico, horasExtra);
-            System.out.printf("%s: %.1f€\n", nome, salario);
-        }
-        System.out.println();
-    }
+            // Percorremos a lista das especialidades à procura da especialidade do médico
+            for (int i = 0; i < especialidades.length; i++) {
+                if (nomesEspecialidades[i].equals(especialidade)) {
+                    String[] dadosEspecialidade = especialidades[i].split("/");
+                    double salarioBase = Double.parseDouble(dadosEspecialidade[1]);
+                    double custoHoraExtra = Double.parseDouble(dadosEspecialidade[2]);
 
-    // Função que percorre a lista de especialidades e imprime o salário total de cada uma
-    public static void printEspecialidades(String[] medicos, String[] especialidades) {
-        for (String especialidade : especialidades) {
-            String nomeEspecialidade = especialidade.split("/")[0];
-            double totalSalario = calcularSalarioEspecialidade(medicos, especialidades, nomeEspecialidade);
-            if (totalSalario > 0)
-                System.out.printf("%s: %.1f€\n", nomeEspecialidade, totalSalario);
-        }
-    }
+                    double componenteFixa = salarioBase * Math.pow(1.04, anos / 5);
+                    double componenteVariavel = horasExtras * custoHoraExtra;
+                    double salario = componenteFixa + componenteVariavel;
 
-    // Função que calcula o salário de um médico
-    public static double calcularSalarioMedico(String[] especialidades, String especialidade, int anosServico, int horasExtra) {
-        for (String esp : especialidades) {
-            String[] dadosEspecialidade = esp.split("/");
-            if (dadosEspecialidade[0].equalsIgnoreCase(especialidade)) {
-                double salarioBase = Double.parseDouble(dadosEspecialidade[1]);
-                double custoHoraExtra = Double.parseDouble(dadosEspecialidade[2]);
+                    salariosEspecialidades[i] += salario;
 
-                int anosServicoIncremento = anosServico / 5;
-                double componenteFixa = salarioBase * Math.pow(1.04, anosServicoIncremento);
-                double componenteVariavel = custoHoraExtra * horasExtra;
-
-                return componenteFixa + componenteVariavel;
+                    System.out.printf("%s: %.1f€\n", nome, salario);
+                    break; 
+                }
             }
         }
-        return 0;
-    }
-
-    // Função que calcula o salário total de todos os médicos de uma especialidade
-    public static double calcularSalarioEspecialidade(String[] medicos, String[] especialidades, String especialidade) {
-        double totalSalario = 0;
-        for (String medico : medicos) {
-            String[] dadosMedico = medico.split("/");
-            String especialidadeMedico = dadosMedico[1];
-            int anosServico = Integer.parseInt(dadosMedico[2]);
-            int horasExtra = Integer.parseInt(dadosMedico[3]);
-
-            if (especialidadeMedico.equalsIgnoreCase(especialidade)) 
-                totalSalario += calcularSalarioMedico(especialidades, especialidade, anosServico, horasExtra);
-        }
-        return totalSalario;
+        System.out.println();
+        for (int i = 0; i < especialidades.length; i++) 
+            if (salariosEspecialidades[i] > 0)
+                System.out.printf("%s: %.1f€\n", nomesEspecialidades[i], salariosEspecialidades[i]);
     }
 }
